@@ -1,0 +1,39 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of go build
+/fancy-adventure
+
+# Dependency directories
+/pkg/
+/vendor/
+/go/pkg/mod/
+
+# Build cache
+/go/build/
+*.cache
+*.tmp
+/.cache/go-build
+
+# IDE / editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables / secrets
+.env
+.env.local
