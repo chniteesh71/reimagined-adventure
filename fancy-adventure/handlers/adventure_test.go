@@ -24,7 +24,7 @@ func setupRouterWithTemplate() *gin.Engine {
 	r := gin.New()
 
 	// parse the small template above and attach to router
-	t := template.Must(template.New("index").Parse(testIndexTmpl))
+	t := template.Must(template.New("index.html").Parse(testIndexTmpl))
 	r.SetHTMLTemplate(t)
 
 	// register handlers exactly as in main.go
