@@ -44,27 +44,31 @@ stages {
 
     
     stage('Docker Build & Push') {
-        when {
-            expression { return env.BRANCH_NAME == 'main' }
-        }
-        steps {
-            script {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USERNAME',
-                    passwordVariable: 'DOCKER_PASSWORD'
-                )]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    sh """
-                      docker build -t $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:latest .
-                      docker tag $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:latest $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:${GIT_COMMIT}
-                      docker push $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:latest
-                      docker push $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:${GIT_COMMIT}
-                    """
-                }
+      steps {
+        script {
+            // Get the current commit SHA
+            def commitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+
+            withCredentials([usernamePassword(
+                credentialsId: 'dockerhub-creds',
+                usernameVariable: 'DOCKER_USERNAME',
+                passwordVariable: 'DOCKER_PASSWORD'
+            )]) {
+                // Login to Docker
+                sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+
+                // Build and push
+                sh """
+                  docker build -t $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:latest .
+                  docker tag $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:latest $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:${commitSha}
+                  docker push $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:latest
+                  docker push $DOCKER_REGISTRY/$DOCKER_USERNAME/$APP_NAME:${commitSha}
+                """
             }
         }
+      }
     }
+
 }
 
 
