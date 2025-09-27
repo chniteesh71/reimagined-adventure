@@ -1,11 +1,12 @@
 pipeline {
 agent any
 
-```
+
 environment {
     DOCKER_REGISTRY = "docker.io"
     APP_NAME = "jenkins-go-name-app"
 }
+
 tools {
         go 'Go'
     }
@@ -70,6 +71,6 @@ stages {
         }
     }
 }
-```
+
 
 }
