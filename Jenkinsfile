@@ -44,6 +44,7 @@ stages {
 
     stage('Lint') {
       steps {
+        dir('fancy-adventure'){ 
         sh '''
           (
             export PATH=$PATH:$(go env GOPATH)/bin
@@ -54,9 +55,10 @@ stages {
                 | sh -s -- -b $(go env GOPATH)/bin v1.61.0
             fi
 
-            golangci-lint run ./fancy-adventure
+            golangci-lint run ./...
           )
         '''
+       }
       }
     }
 
