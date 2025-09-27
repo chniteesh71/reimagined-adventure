@@ -36,17 +36,18 @@ stages {
     }
 
     stage('Lint') {
-        steps {
-            sh '''
-              if ! command -v golangci-lint >/dev/null 2>&1; then
-                git clone --depth 1 https://github.com/golangci/golangci-lint.git
-                cd golangci-lint
-                go build -o $(go env GOPATH)/bin/golangci-lint ./cmd/golangci-lint
-              fi
-              golangci-lint run ./fancy-adventure
-            '''
-        }
-    }
+      steps {
+        sh '''
+          if ! command -v golangci-lint >/dev/null 2>&1; then
+            echo "Installing golangci-lint..."
+            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+              | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+          fi
+          golangci-lint run ./fancy-adventure
+        '''
+      }
+   }
+
 
     stage('Docker Build & Push') {
         when {
