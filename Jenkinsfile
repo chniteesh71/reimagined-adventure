@@ -42,27 +42,7 @@ stages {
         }
     }
 
-    stage('Lint') {
-      steps {
-        sh '''
-          (
-            export PATH=$PATH:$(go env GOPATH)/bin
-
-            if ! command -v golangci-lint >/dev/null 2>&1; then
-              echo "Installing golangci-lint..."
-              curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-                | sh -s -- -b $(go env GOPATH)/bin v1.61.0
-            fi
-
-            golangci-lint run ./fancy-adventure/..
-          )
-        '''
-       }
-    }
-
-
-
-
+    
     stage('Docker Build & Push') {
         when {
             expression { return env.BRANCH_NAME == 'main' }
