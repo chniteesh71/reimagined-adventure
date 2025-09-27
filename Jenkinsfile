@@ -45,7 +45,6 @@ stages {
     
     stage('Docker Build & Push') {
       steps {
-        dir('fancy-adventure') {
          script {
             def commitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
             withCredentials([usernamePassword(
@@ -63,7 +62,6 @@ stages {
             }
          }
         }
-      }
     }
 
 
