@@ -12,17 +12,19 @@ tools {
     }
 
 stages {
+    stage('Clean Workspace') {
+      steps {
+        deleteDir()
+      }
+   } 
+   
     stage('Checkout') {
         steps {
             checkout scm
         }
     }
 
-    stage('Clean Workspace') {
-      steps {
-        deleteDir()
-      }
-   } 
+    
 
     stage('Dependencies') {
         steps {
