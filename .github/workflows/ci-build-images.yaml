@@ -1,8 +1,5 @@
 name: workflow-for-Go-app
 on:
-   push:
-      branches:
-        - main
    workflow_dispatch:
 jobs:
   job1-testing:
@@ -11,7 +8,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Setup Go
+      - name: Setup Java SDK
         uses: actions/setup-go@v6
         with:
          go-version:  '1.25.1'
