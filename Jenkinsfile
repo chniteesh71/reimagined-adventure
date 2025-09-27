@@ -18,7 +18,12 @@ stages {
         }
     }
 
-    
+    stage('Clean Workspace') {
+      steps {
+        deleteDir()
+      }
+   } 
+
     stage('Dependencies') {
         steps {
             dir('fancy-adventure') {
