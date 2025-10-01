@@ -11,7 +11,6 @@ phases:
       - go mod tidy
   pre_build:
     commands:
-      - cd fancy-adventure
       - echo "Running tests..."
       - go test ./... -v
       # Install golangci-lint
@@ -20,7 +19,6 @@ phases:
       - golangci-lint version
   build:
     commands:
-      - cd fancy-adventure
       - echo "Running golangci-lint..."
       - cd $CODEBUILD_SRC_DIR/fancy-adventure && golangci-lint run
 artifacts:
