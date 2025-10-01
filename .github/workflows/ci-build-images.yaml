@@ -42,7 +42,7 @@ jobs:
         run: GOTOOLCHAIN="" golangci-lint run
         working-directory: fancy-adventure
 
-  job2-builder-docker-image:
+  job2-builder-docker-image:  
      needs: job1-testing
      runs-on: ubuntu-latest
      env:

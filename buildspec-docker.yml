@@ -1,0 +1,35 @@
+version: 0.2
+
+env:
+  variables:
+    APP_NAME: "go-name-app"
+
+phases:
+  install:
+    commands:
+      
+      # Manually install AWS CLI v2 (optional if your image already has it)
+      - echo "Checking AWS CLI version..."
+      - aws --version
+
+  pre_build:
+    commands:
+       - echo "Logging in to Amazon ECR..."
+       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+      # Run the entire command inside an explicit shell to ensure proper parsing
+       - |
+         # Get the password and pipe it to docker login
+         aws ecr get-login-password --region $AWS_DEFAULT_REGION | \
+         docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+
+  build:
+    commands:
+      - docker build -t $APP_NAME .
+      - docker tag $APP_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_NAME:latest
+      - docker tag $APP_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+
+  post_build:
+    commands:
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_NAME:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$APP_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+

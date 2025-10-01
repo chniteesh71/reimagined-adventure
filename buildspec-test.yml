@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.25
+    commands:
+      - cd fancy-adventure
+      - echo "Installing dependencies..."
+      - go version
+      - go mod tidy
+  pre_build:
+    commands:
+      - cd fancy-adventure
+      - echo "Running tests..."
+      - go test ./... -v
+      # Install golangci-lint
+      - git clone --depth 1 https://github.com/golangci/golangci-lint.git
+      - cd golangci-lint && go build -o /usr/local/bin/golangci-lint ./cmd/golangci-lint
+      - golangci-lint version
+  build:
+    commands:
+      - cd fancy-adventure
+      - echo "Running golangci-lint..."
+      - cd $CODEBUILD_SRC_DIR/fancy-adventure && golangci-lint run
+artifacts:
+  files:
+    - '**/*'
